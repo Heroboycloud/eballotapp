@@ -243,6 +243,136 @@ foreach ($candidates as $candidate) {
                                         <?php endif; ?>
                                     </div>
                                 </div>
+
+
+                                  <div class="position-section">
+                                    <div class="position-header">
+                                        <h3>Financial Secretary</h3>
+                                        <p class="mb-0">Select one candidate for Financial Secretary</p>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <?php if (isset($candidates_by_position['Fin.Secrerary'])): ?>
+                                            <?php foreach ($candidates_by_position['Fin.Secrerary'] as $candidate): ?>
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="candidate-card" onclick="selectCandidate('secretary', '<?= $candidate['name'] ?>')">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="fin_secretary" 
+                                                                   id="fin_secretary_<?= $candidate['id'] ?>" 
+                                                                   value="<?= htmlspecialchars($candidate['name']) ?>" required>
+                                                            <label class="form-check-label w-100" for="fin_secretary_<?= $candidate['id'] ?>">
+                                                                <h5><?= htmlspecialchars($candidate['name']) ?></h5>
+                                                                <p class="text-muted mb-0">Position: <?= htmlspecialchars($candidate['position']) ?></p>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <div class="col-12">
+                                                <div class="alert alert-warning">No candidates available for Financial Secretary position.</div>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                                  <div class="position-section">
+                                    <div class="position-header">
+                                        <h3>Treasurer</h3>
+                                        <p class="mb-0">Select one candidate for Treasurer</p>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <?php if (isset($candidates_by_position['Treasurer'])): ?>
+                                            <?php foreach ($candidates_by_position['Treasurer'] as $candidate): ?>
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="candidate-card" onclick="selectCandidate('treasurer', '<?= $candidate['name'] ?>')">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="treasurer" 
+                                                                   id="treasurer_<?= $candidate['id'] ?>" 
+                                                                   value="<?= htmlspecialchars($candidate['name']) ?>" required>
+                                                            <label class="form-check-label w-100" for="treasurer_<?= $candidate['id'] ?>">
+                                                                <h5><?= htmlspecialchars($candidate['name']) ?></h5>
+                                                                <p class="text-muted mb-0">Position: <?= htmlspecialchars($candidate['position']) ?></p>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <div class="col-12">
+                                                <div class="alert alert-warning">No candidates available for Treasurer position.</div>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                                  <div class="position-section">
+                                    <div class="position-header">
+                                        <h3>PRO</h3>
+                                        <p class="mb-0">Select one candidate for PRO</p>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <?php if (isset($candidates_by_position['PRO'])): ?>
+                                            <?php foreach ($candidates_by_position['PRO'] as $candidate): ?>
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="candidate-card" onclick="selectCandidate('pro', '<?= $candidate['name'] ?>')">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="pro" 
+                                                                   id="pro_<?= $candidate['id'] ?>" 
+                                                                   value="<?= htmlspecialchars($candidate['name']) ?>" required>
+                                                            <label class="form-check-label w-100" for="pro_<?= $candidate['id'] ?>">
+                                                                <h5><?= htmlspecialchars($candidate['name']) ?></h5>
+                                                                <p class="text-muted mb-0">Position: <?= htmlspecialchars($candidate['position']) ?></p>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <div class="col-12">
+                                                <div class="alert alert-warning">No candidates available for PRO position.</div>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                 
                                 <!-- Secretary Position -->
                                 <div class="position-section">
