@@ -252,8 +252,8 @@ foreach ($candidates as $candidate) {
                                     </div>
                                     
                                     <div class="row">
-                                        <?php if (isset($candidates_by_position['Secretary'])): ?>
-                                            <?php foreach ($candidates_by_position['Secretary'] as $candidate): ?>
+                                        <?php if (isset($candidates_by_position['General Secretary'])): ?>
+                                            <?php foreach ($candidates_by_position['General Secretary'] as $candidate): ?>
                                                 <div class="col-md-6 mb-3">
                                                     <div class="candidate-card" onclick="selectCandidate('secretary', '<?= $candidate['name'] ?>')">
                                                         <div class="form-check">
