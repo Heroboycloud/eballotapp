@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
 $db   = 'eballot';
-$user = 'u0_a23'; // pass username here ... this is mine ... yeah no ask me again
-$pass = ''; // passowrd here
+$user = 'azeez'; // pass username here ... this is mine ... yeah no ask me again
+$pass = 'azeezat'; // passowrd here
 //$charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db";

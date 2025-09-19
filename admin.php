@@ -132,12 +132,14 @@ $source2_only = $stmt->fetch()['source2_only'];
 
 $stmt = $pdo->query("SELECT COUNT(*) as both_sources FROM voters WHERE payment_source_1 = TRUE AND payment_source_2 = TRUE");
 $both_sources = $stmt->fetch()['both_sources'];
-
+/*
 $stmt = $pdo->query("SELECT c.name, c.position, COUNT(v.vote_candidate) as votes 
                      FROM candidates c 
                      LEFT JOIN voters v ON c.name = v.vote_candidate 
                      GROUP BY c.name, c.position");
 $results = $stmt->fetchAll();
+
+*/
 ?>
 <!DOCTYPE html>
 <html lang="en">

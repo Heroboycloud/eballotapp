@@ -31,6 +31,6 @@ INSERT INTO candidates (name, position) VALUES
 ('Omolade Adeniji','Vice President'),
 ('Hammed Kamorudeen','General Secretary'),
 ('Olagunju Akeem','General Secretary'),
-('Adekunle Raji','Fin.Secrerary')
+('Adekunle Raji','Fin.Secrerary'),
 ('Adeleke Adeniyi','Treasurer'),
 ('Olaniyi Wakeel','PRO');
