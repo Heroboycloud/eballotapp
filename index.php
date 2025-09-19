@@ -156,10 +156,7 @@ foreach ($candidates as $candidate) {
                 <h4>Voting Successful!</h4>
                 <p><strong>Thank you, <?= htmlspecialchars($voter_name) ?>!</strong></p>
                 <p>Your votes have been recorded:</p>
-                <ul>
-                    <li><strong>Vice President:</strong> <?= htmlspecialchars($president_vote) ?></li>
-                    <li><strong>Secretary:</strong> <?= htmlspecialchars($secretary_vote) ?></li>
-                </ul>
+              
                 <p class="mb-0">You have successfully completed the voting process.</p>
             </div>
         <?php endif; ?>
@@ -212,6 +209,42 @@ foreach ($candidates as $candidate) {
                             <p class="lead text-center mb-4">Please select one candidate for each position:</p>
                             
                             <form method="POST" id="votingForm">
+
+
+   <div class="position-section">
+                                    <div class="position-header">
+                                        <h3>President</h3>
+                                        <p class="mb-0">Select one candidate for President</p>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <?php if (isset($candidates_by_position['President'])): ?>
+                                            <?php foreach ($candidates_by_position['President'] as $candidate): ?>
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="candidate-card" onclick="selectCandidate('Ppresident', '<?= $candidate['name'] ?>')">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="Ppresident" 
+                                                                   id="Ppresident_<?= $candidate['id'] ?>" 
+                                                                   value="<?= htmlspecialchars($candidate['name']) ?>" required>
+                                                            <label class="form-check-label w-100" for="Ppresident_<?= $candidate['id'] ?>">
+                                                                <h5><?= htmlspecialchars($candidate['name']) ?></h5>
+                                                                <p class="text-muted mb-0">Position: <?= htmlspecialchars($candidate['position']) ?></p>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <div class="col-12">
+                                                <div class="alert alert-warning">No candidates available for  President position.</div>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+
+
+
                                 <!-- President Position -->
                                 <div class="position-section">
                                     <div class="position-header">
@@ -409,8 +442,15 @@ foreach ($candidates as $candidate) {
                                 <!-- Vote Summary -->
                                 <div class="vote-summary" id="voteSummary" style="display: none;">
                                     <h5>Your Selected Candidates:</h5>
+                                    <p><strong>President:</strong> <span id="selectedPPresident">Not selected</span></p>
+
                                     <p><strong>Vice President:</strong> <span id="selectedPresident">Not selected</span></p>
-                                    <p><strong>Secretary:</strong> <span id="selectedSecretary">Not selected</span></p>
+                                    <p><strong>General Secretary:</strong> <span id="selectedSecretary">Not selected</span></p>
+
+                                    <p><strong>PRO:</strong> <span id="selectedPro">Not selected</span></p>
+                                    <p><strong>Financial Secretary:</strong> <span id="selectedFinSecretary">Not selected</span></p>
+                                    <p><strong> Treasurer:</strong> <span id="selectedtreasurer">Not selected</span></p>
+
                                     <div class="alert alert-info">
                                         <small>Please review your selections before submitting. You cannot change your votes after submission.</small>
                                     </div>
@@ -454,17 +494,30 @@ foreach ($candidates as $candidate) {
         
         function updateVoteSummary() {
             const presidentRadio = document.querySelector('input[name="president"]:checked');
+            const PpresidentRadio = document.querySelector('input[name="Ppresident"]:checked');
+
             const secretaryRadio = document.querySelector('input[name="secretary"]:checked');
-            
+            const finsecretaryRadio = document.querySelector('input[name="fin_secretary"]:checked');
+            const proRadio = document.querySelector('input[name="pro"]:checked');
+            const treasurerRadio = document.querySelector('input[name="treasurer"]:checked');
             if (presidentRadio || secretaryRadio) {
                 document.getElementById('voteSummary').style.display = 'block';
-                
+                 if (PpresidentRadio) {
+                    document.getElementById('selectedPPresident').textContent = PpresidentRadio.value;
+                }
                 if (presidentRadio) {
                     document.getElementById('selectedPresident').textContent = presidentRadio.value;
                 }
                 
                 if (secretaryRadio) {
                     document.getElementById('selectedSecretary').textContent = secretaryRadio.value;
+                }
+                  if (finsecretaryRadio) {
+                    document.getElementById('selectedFinSecretary').textContent = finsecretaryRadio.value;
+                }  if (proRadio) {
+                    document.getElementById('selectedPro').textContent = proRadio.value;
+                }  if (treasurerRadio) {
+                    document.getElementById('selectedtreasurer').textContent = treasurerRadio.value;
                 }
             }
         }
