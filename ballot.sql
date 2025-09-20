@@ -34,3 +34,4 @@ INSERT INTO candidates (name, position) VALUES
 ('Adekunle Raji','Fin.Secrerary'),
 ('Adeleke Adeniyi','Treasurer'),
 ('Olaniyi Wakeel','PRO');
+

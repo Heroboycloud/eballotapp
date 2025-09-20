@@ -107,8 +107,7 @@ $stmt = $pdo->prepare("INSERT INTO voters (voter_id, full_name, payment_source_1
         // Update has_paid status for voters who paid in both sources
         $pdo->exec("UPDATE voters 
                    SET has_paid = TRUE, 
-                       total_payment_amount = (payment_amount_1 + payment_amount_2)
-                   WHERE payment_source_1 = TRUE AND payment_source_2 = TRUE");
+                       total_payment_amount = (payment_amount_1 + payment_amount_2)");
         
         $message = "Excel file processed successfully. " . count($validVoters) . " payments recorded from source $payment_source.";
         
