@@ -48,13 +48,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['vote'])) {
         // Get selected candidates for both positions
         $vote_president = $_POST['president'] ?? '';
         $vote_secretary = $_POST['secretary'] ?? '';
-        
+        $vote_treasurer = $_POST['treasurer'] ?? '';
+        $vote_fin_secretary = $_POST['fin_secretary'] ?? '';
+        $vote_pro = $_POST['pro'] ?? '';
+        $vote_Ppresident = $_POST['Ppresident'] ?? '';
         // Validate that both positions are selected
         if (empty($vote_president) || empty($vote_secretary)) {
             $error = "Please select a candidate for both positions.";
         } else {
-            $stmt = $pdo->prepare("UPDATE voters SET has_voted = TRUE, vote_president = ?, vote_secretary = ? WHERE voter_id = ?");
-            $stmt->execute([$vote_president, $vote_secretary, $voter['voter_id']]);
+            $stmt = $pdo->prepare("UPDATE voters SET has_voted = TRUE, vote_president = ?, vote_secretary = ?,vote_Ppresident=?,vote_treasurer=?,vote_fin_secretary=?, vote_pro=? WHERE voter_id = ?");
+            $stmt->execute([$vote_president, $vote_secretary,$vote_Ppresident,$vote_treasurer,$vote_fin_secretary,$vote_pro, $voter['voter_id']]);
             
             $success = "Your votes have been cast successfully!";
             $voter_name = $voter['full_name'];
@@ -142,7 +145,7 @@ foreach ($candidates as $candidate) {
     <div class="hero-section">
         <div class="container text-center">
             <h1 class="display-4">E-Ballot Voting System</h1>
-            <p class="lead">Vote for Vice President and Secretary Positions</p>
+            <p class="lead">Vote for Positions</p>
         </div>
     </div>
 
@@ -166,8 +169,8 @@ foreach ($candidates as $candidate) {
                 <div class="col-md-8">
                     <div class="eligibility-info">
                         <h5>Voting Eligibility Requirements</h5>
-                        <p>To be eligible to vote, you must have made payments in <strong>both</strong> payment sources.</p>
-                        <p class="mb-0">You will be voting for <strong>two positions</strong>: Vice President and Secretary.</p>
+                        <p>To be eligible to vote, you must have made payments in <strong>any</strong> payment sources.</p>
+                        <p class="mb-0">You will be voting for <strong> positions</strong>: Vice President,General Secretary, PRO and treasurer.</p>
                     </div>
                     
                     <div class="card">

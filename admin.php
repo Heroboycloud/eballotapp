@@ -276,6 +276,75 @@ $results = $stmt->fetchAll();
     <div class="card-body">
         <div class="row">
             <!-- President Results -->
+               <!-- Secretary Results -->
+            <div class="col-md-6">
+                <h6>President Election Results</h6>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Candidate</th>
+                            <th>Votes</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $stmt = $pdo->query("
+                            SELECT vote_Ppresident as candidate, COUNT(*) as votes 
+                            FROM voters 
+                            WHERE vote_Ppresident IS NOT NULL 
+                            GROUP BY vote_Ppresident 
+                            ORDER BY votes DESC
+                        ");
+                        $secretary_results = $stmt->fetchAll();
+                        $total_secretary_votes = array_sum(array_column($secretary_results, 'votes'));
+                        
+                        foreach ($secretary_results as $result): 
+                            $percentage = $total_secretary_votes > 0 ? round(($result['votes'] / $total_secretary_votes) * 100, 2) : 0;
+                        ?>
+                            <tr>
+                                <td><?= htmlspecialchars($result['candidate']) ?></td>
+                                <td><?= $result['votes'] ?></td>
+                                <td><?= $percentage ?>%</td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <div class="col-md-6">
                 <h6>Vice President Election Results</h6>
                 <table class="table table-sm">
@@ -346,6 +415,178 @@ $results = $stmt->fetchAll();
                     </tbody>
                 </table>
             </div>
+
+
+
+               <!-- Secretary Results -->
+            <div class="col-md-6">
+                <h6>Financial Secretary Election Results</h6>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Candidate</th>
+                            <th>Votes</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $stmt = $pdo->query("
+                            SELECT vote_fin_secretary as candidate, COUNT(*) as votes 
+                            FROM voters 
+                            WHERE vote_fin_secretary IS NOT NULL 
+                            GROUP BY vote_fin_secretary 
+                            ORDER BY votes DESC
+                        ");
+                        $secretary_results = $stmt->fetchAll();
+                        $total_secretary_votes = array_sum(array_column($secretary_results, 'votes'));
+                        
+                        foreach ($secretary_results as $result): 
+                            $percentage = $total_secretary_votes > 0 ? round(($result['votes'] / $total_secretary_votes) * 100, 2) : 0;
+                        ?>
+                            <tr>
+                                <td><?= htmlspecialchars($result['candidate']) ?></td>
+                                <td><?= $result['votes'] ?></td>
+                                <td><?= $percentage ?>%</td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+
+               <!-- Secretary Results -->
+            <div class="col-md-6">
+                <h6>Treasurer Election Results</h6>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Candidate</th>
+                            <th>Votes</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $stmt = $pdo->query("
+                            SELECT vote_treasurer as candidate, COUNT(*) as votes 
+                            FROM voters 
+                            WHERE vote_treasurer IS NOT NULL 
+                            GROUP BY vote_treasurer 
+                            ORDER BY votes DESC
+                        ");
+                        $secretary_results = $stmt->fetchAll();
+                        $total_secretary_votes = array_sum(array_column($secretary_results, 'votes'));
+                        
+                        foreach ($secretary_results as $result): 
+                            $percentage = $total_secretary_votes > 0 ? round(($result['votes'] / $total_secretary_votes) * 100, 2) : 0;
+                        ?>
+                            <tr>
+                                <td><?= htmlspecialchars($result['candidate']) ?></td>
+                                <td><?= $result['votes'] ?></td>
+                                <td><?= $percentage ?>%</td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+
+
+
+   <!-- Secretary Results -->
+            <div class="col-md-6">
+                <h6>PRO Election Results</h6>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Candidate</th>
+                            <th>Votes</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $stmt = $pdo->query("
+                            SELECT vote_pro as candidate, COUNT(*) as votes 
+                            FROM voters 
+                            WHERE vote_pro IS NOT NULL 
+                            GROUP BY vote_pro 
+                            ORDER BY votes DESC
+                        ");
+                        $secretary_results = $stmt->fetchAll();
+                        $total_secretary_votes = array_sum(array_column($secretary_results, 'votes'));
+                        
+                        foreach ($secretary_results as $result): 
+                            $percentage = $total_secretary_votes > 0 ? round(($result['votes'] / $total_secretary_votes) * 100, 2) : 0;
+                        ?>
+                            <tr>
+                                <td><?= htmlspecialchars($result['candidate']) ?></td>
+                                <td><?= $result['votes'] ?></td>
+                                <td><?= $percentage ?>%</td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </div>
     </div>
 </div>
