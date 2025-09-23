@@ -139,7 +139,7 @@ $results = $stmt->fetchAll();
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">E-Ballot Admin</a>
+            <a class="navbar-brand" href="#"><img src="logo.jpg" class="img-rounded img-thumbnail" width="30" height="30" />Adventist Grammar School E-Ballot Admin</a>
             <div class="navbar-nav ms-auto">
                 <a class="nav-link" href="logout.php">Logout</a>
             </div>

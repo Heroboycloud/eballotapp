@@ -87,6 +87,7 @@ $candidates = $stmt->fetchAll();
 <body>
     <div class="hero-section">
         <div class="container text-center">
+	    <img src="logo.jpg" class="img-thumbnail" width="50" height="50" />
             <h1 class="display-4">E-Ballot Voting System</h1>
             <p class="lead">Secure online voting - Payment verification required</p>
         </div>

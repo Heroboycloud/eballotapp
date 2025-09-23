@@ -4,13 +4,13 @@ if (isset($_SESSION['admin'])) {
     header('Location: admin.php');
     exit();
 }
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
-    
-    // Simple hardcoded admin credentials (in production, use secure authentication)
-    if ($username === 'admin' && $password === 'admin123') {
+    include "userpass.php";
+    // Get from userpass.php
+   // there wasn't enough time to hide it ..
+    if ($username === $config_username && $password === $config_password) {
         $_SESSION['admin'] = true;
         header('Location: admin.php');
         exit();
@@ -34,6 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <div class="container">
         <div class="login-container">
+	    <img src="logo.jpg" class="img-thumbnail" width="50" height="50" />
+
             <h2 class="text-center mb-4">E-Ballot Admin Login</h2>
             <?php if (isset($error)): ?>
                 <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>

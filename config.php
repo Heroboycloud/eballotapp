@@ -1,11 +1,11 @@
 <?php
 $host = 'localhost';
 $db   = 'eballot';
-$user = 'u0_a23';
-$pass = '';
+$user = 'u0_a23'; // pass username here ... this is mine ... yeah no ask me again
+$pass = ''; // passowrd here
 //$charset = 'utf8mb4';
 
-//$dsn1 = "mysql:host=$host;dbname=$db;charset=$charset";
+$dsn1 = "mysql:host=$host;dbname=$db";
 $dsn = "pgsql:host=$host;dbname=$db";
 
 $options = [
