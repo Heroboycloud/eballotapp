@@ -27,7 +27,7 @@ ALTER TABLE voters ADD COLUMN payment_amount_2 DECIMAL(10,2) DEFAULT 0;
 -- Or recreate the table if needed:
 DROP TABLE IF EXISTS voters;
 CREATE TABLE voters (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id serial PRIMARY KEY,
     voter_id VARCHAR(50) UNIQUE,
     full_name VARCHAR(100),
     email VARCHAR(100),
@@ -44,7 +44,7 @@ CREATE TABLE voters (
 
 
 CREATE TABLE candidates (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id serial PRIMARY KEY,
     name VARCHAR(100),
     position VARCHAR(100)
 );
