@@ -5,8 +5,8 @@ $user = 'u0_a23'; // pass username here ... this is mine ... yeah no ask me agai
 $pass = ''; // passowrd here
 //$charset = 'utf8mb4';
 
-$dsn1 = "mysql:host=$host;dbname=$db";
-$dsn = "pgsql:host=$host;dbname=$db";
+$dsn = "mysql:host=$host;dbname=$db";
+//$dsn1 = "pgsql:host=$host;dbname=$db";
 
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,

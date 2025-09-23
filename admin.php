@@ -73,15 +73,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['excel_file'])) {
         
         // Update database based on payment source
         if ($payment_source == 1) {
-             $stmt = $pdo->prepare("INSERT INTO voters (voter_id, full_name, payment_source_1, payment_amount_1) 
+/*             $stmt = $pdo->prepare("INSERT INTO voters (voter_id, full_name, payment_source_1, payment_amount_1) 
                                    VALUES (?, ?, TRUE, ?)
                                    ON CONFLICT (voter_id) DO UPDATE SET payment_source_1 = TRUE, payment_amount_1 = ?");
-                            
+*/
+$stmt = $pdo->prepare("INSERT INTO voters (voter_id, full_name, payment_source_1, payment_amount_1) 
+                                   VALUES (?, ?, TRUE, ?)
+                                   ON DUPLICATE KEY UPDATE payment_source_1 = TRUE, payment_amount_1 = ?");
 
         } else {
-            $stmt = $pdo->prepare("INSERT INTO voters (voter_id, full_name, payment_source_2, payment_amount_2) 
+/*            $stmt = $pdo->prepare("INSERT INTO voters (voter_id, full_name, payment_source_2, payment_amount_2) 
                                    VALUES (?, ?, TRUE, ?)
                                    ON CONFLICT(voter_id) DO UPDATE SET payment_source_2 = TRUE, payment_amount_2 = ?");
+
+*/
+$stmt = $pdo->prepare("INSERT INTO voters (voter_id, full_name, payment_source_1, payment_amount_1) 
+                                   VALUES (?, ?, TRUE, ?)
+                                   ON DUPLICATE KEY UPDATE payment_source_2 = TRUE, payment_amount_2 = ?");
+
+
+
         }
         
         foreach ($validVoters as $voter) {
