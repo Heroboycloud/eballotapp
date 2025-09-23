@@ -20,7 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['voter_id'])) {
     
     if ($voter) {
         if (!$voter['has_paid']) {
-            $error = "You are not eligible to vote. Payment not verified.";
+            $error = "You are not eligible to vote. You need to have paid in both payment sources.";
+            if ($voter['payment_source_1'] && !$voter['payment_source_2']) {
+                $error .= " (You have only paid in Source 1)";
+            } elseif (!$voter['payment_source_1'] && $voter['payment_source_2']) {
+                $error .= " (You have only paid in Source 2)";
+            } else {
+                $error .= " (No payments recorded)";
+            }
             $voter = null;
         } elseif ($voter['has_voted']) {
             $error = "You have already voted.";
@@ -69,13 +76,19 @@ $candidates = $stmt->fetchAll();
             padding: 100px 0;
             margin-bottom: 40px;
         }
+        .eligibility-info {
+            background-color: #e7f3ff;
+            border-left: 4px solid #0d6efd;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="hero-section">
         <div class="container text-center">
             <h1 class="display-4">E-Ballot Voting System</h1>
-            <p class="lead">Secure online voting for your organization</p>
+            <p class="lead">Secure online voting - Payment verification required</p>
         </div>
     </div>
 
@@ -90,7 +103,13 @@ $candidates = $stmt->fetchAll();
         
         <?php if (!$voter): ?>
             <div class="row justify-content-center">
-                <div class="col-md-6">
+                <div class="col-md-8">
+                    <div class="eligibility-info">
+                        <h5>Voting Eligibility Requirements</h5>
+                        <p>To be eligible to vote, you must have made payments in <strong>both</strong> payment sources.</p>
+                        <p class="mb-0">If you have only paid in one source, please contact the administrator.</p>
+                    </div>
+                    
                     <div class="card">
                         <div class="card-header">
                             <h4>Verify Your Eligibility</h4>
@@ -99,37 +118,68 @@ $candidates = $stmt->fetchAll();
                             <form method="POST">
                                 <div class="mb-3">
                                     <label for="voter_id" class="form-label">Voter ID</label>
-                                    <input type="text" class="form-control" id="voter_id" name="voter_id" required>
+                                    <input type="text" class="form-control" id="voter_id" name="voter_id" required 
+                                           placeholder="Enter your assigned Voter ID">
+                                    <div class="form-text">Your Voter ID should have been provided to you.</div>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100">Check Eligibility</button>
                             </form>
+                        </div>
+                    </div>
+                    
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5>Don't know your Voter ID?</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>If you don't know your Voter ID, please contact the election administrator with your full name.</p>
+                            <p class="mb-0">Your Voter ID is typically generated from your name and payment records.</p>
                         </div>
                     </div>
                 </div>
             </div>
         <?php else: ?>
             <div class="row justify-content-center">
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header bg-success text-white">
                             <h4>Cast Your Vote</h4>
                         </div>
                         <div class="card-body">
-                            <p>Welcome, <strong><?= htmlspecialchars($voter['full_name']) ?></strong>!</p>
+                            <div class="alert alert-success">
+                                <h5>Eligibility Confirmed!</h5>
+                                <p>Welcome, <strong><?= htmlspecialchars($voter['full_name']) ?></strong>!</p>
+                                <p class="mb-0">Payment Status: 
+                                    <span class="badge bg-success">Source 1: ₦<?= $voter['payment_amount_1'] ?></span>
+                                    <span class="badge bg-success">Source 2: ₦<?= $voter['payment_amount_2'] ?></span>
+                                    <span class="badge bg-info">Total: ₦<?= $voter['total_payment_amount'] ?></span>
+                                </p>
+                            </div>
+                            
                             <p>Please select your preferred candidate:</p>
                             
                             <form method="POST">
-                                <?php foreach ($candidates as $candidate): ?>
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="radio" name="candidate" 
-                                               id="candidate<?= $candidate['id'] ?>" value="<?= htmlspecialchars($candidate['name']) ?>" required>
-                                        <label class="form-check-label" for="candidate<?= $candidate['id'] ?>">
-                                            <strong><?= htmlspecialchars($candidate['name']) ?></strong> - <?= htmlspecialchars($candidate['position']) ?>
-                                        </label>
-                                    </div>
-                                <?php endforeach; ?>
+                                <div class="row">
+                                    <?php foreach ($candidates as $candidate): ?>
+                                        <div class="col-md-6 mb-3">
+                                            <div class="form-check card">
+                                                <div class="card-body">
+                                                    <input class="form-check-input" type="radio" name="candidate" 
+                                                           id="candidate<?= $candidate['id'] ?>" 
+                                                           value="<?= htmlspecialchars($candidate['name']) ?>" required>
+                                                    <label class="form-check-label w-100" for="candidate<?= $candidate['id'] ?>">
+                                                        <strong><?= htmlspecialchars($candidate['name']) ?></strong><br>
+                                                        <small class="text-muted">Position: <?= htmlspecialchars($candidate['position']) ?></small>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
                                 
-                                <button type="submit" name="vote" class="btn btn-success btn-lg w-100 mt-3">Cast Vote</button>
+                                <div class="mt-4">
+                                    <button type="submit" name="vote" class="btn btn-success btn-lg w-100">Cast My Vote</button>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -139,7 +189,7 @@ $candidates = $stmt->fetchAll();
     </div>
 
     <footer class="bg-dark text-white text-center py-4 mt-5">
-        <p>E-Ballot System &copy; <?= date('Y') ?></p>
+        <p>E-Ballot System &copy; <?= date('Y') ?> | Payment Verification Required</p>
     </footer>
 </body>
 </html>
