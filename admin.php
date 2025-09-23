@@ -23,20 +23,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['excel_file'])) {
         // Process the specific format of your Excel file
         $payments = [];
         $startProcessing = false;
+        unset($data[0]);
+        unset($data[1]);
         
         foreach ($data as $row) {
             // Skip empty rows and header rows
             if (count($row) < 3 || empty($row[1])) continue;
             
             // Look for the start of payment records (after header rows)
-            if (strpos($row[1], 'Adventist Grammar School') !== false) {
-                $startProcessing = true;
-                continue;
-            }
+    /*        if (strpos($row[1], 'Adventist Grammar School') !== false) {
+          } */
             
-            if ($startProcessing && !empty($row[1]) && !empty($row[2]) && is_numeric($row[2])) {
+            
                 $full_name = trim($row[1]);
-                $amount = floatval($row[2]);
+                $amount = trim($row[2]);
+                $amount= floatval(str_replace(",","",$amount));
                 
                 if ($amount > 0) {
                     // Generate voter_id from name (you might want a better method)
@@ -52,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['excel_file'])) {
                         'amount' => $amount
                     ];
                 }
-            }
+            
         }
         
         // Process payments and update database
@@ -72,13 +73,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['excel_file'])) {
         
         // Update database based on payment source
         if ($payment_source == 1) {
-            $stmt = $pdo->prepare("INSERT INTO voters (voter_id, full_name, payment_source_1, payment_amount_1) 
+             $stmt = $pdo->prepare("INSERT INTO voters (voter_id, full_name, payment_source_1, payment_amount_1) 
                                    VALUES (?, ?, TRUE, ?)
-                                   ON DUPLICATE KEY UPDATE payment_source_1 = TRUE, payment_amount_1 = ?");
+                                   ON CONFLICT (voter_id) DO UPDATE SET payment_source_1 = TRUE, payment_amount_1 = ?");
+                            
+
         } else {
             $stmt = $pdo->prepare("INSERT INTO voters (voter_id, full_name, payment_source_2, payment_amount_2) 
                                    VALUES (?, ?, TRUE, ?)
-                                   ON DUPLICATE KEY UPDATE payment_source_2 = TRUE, payment_amount_2 = ?");
+                                   ON CONFLICT(voter_id) DO UPDATE SET payment_source_2 = TRUE, payment_amount_2 = ?");
         }
         
         foreach ($validVoters as $voter) {
