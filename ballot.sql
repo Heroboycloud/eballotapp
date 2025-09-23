@@ -49,6 +49,9 @@ CREATE TABLE candidates (
     position VARCHAR(100)
 );
 
+
+-- insert or edit name odf peopleto o vote for
+
 INSERT INTO candidates (name, position) VALUES 
 ('Dewale thomas', 'President'),
 ('Daniel josiah', 'President'),
