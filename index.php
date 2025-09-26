@@ -28,10 +28,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['voter_id'])) {
             } else {
                 $error .= " (No payments recorded)";
             }
-            $voter = null;
+//            $voter = null;
+            $_SESSION['voter_id'] = $voter_id;
+
         } elseif ($voter['has_voted']) {
-            $error = "You have already voted.";
-            $voter = null;
+//            $error = "You have already voted.";
+//           $voter = null;
+            $_SESSION['voter_id'] = $voter_id;
         } else {
             $_SESSION['voter_id'] = $voter_id;
         }

@@ -53,7 +53,11 @@ CREATE TABLE candidates (
 -- insert or edit name odf peopleto o vote for
 
 INSERT INTO candidates (name, position) VALUES 
-('Dewale thomas', 'President'),
-('Daniel josiah', 'President'),
-('Michael Adeola', 'Secretary'),
-('Emily Ayomide', 'Secretary');
+('Akintayo Ogunjide','President'),
+('Funmi Olabiyi','Vice President'),
+('Omolade Adeniji','Vice President'),
+('Hammed Kamorudeen','General Secretary'),
+('Olagunju Akeem','General Secretary'),
+('Adekunle Raji','Fin.Secrerary')
+('Adeleke Adeniyi','Treasurer'),
+('Olaniyi Wakeel','PRO');
