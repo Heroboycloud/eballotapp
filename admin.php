@@ -191,19 +191,10 @@ $results = $stmt->fetchAll();
                 </div>
             </div>
             
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5>Payment Statistics</h5>
-                    </div>
-                    <div class="card-body">
-                        <p>Paid in Source 1 Only: <strong><?= $source1_only ?></strong></p>
-                        <p>Paid in Source 2 Only: <strong><?= $source2_only ?></strong></p>
-                        <p>Paid in Both Sources: <strong><?= $both_sources ?></strong></p>
-                        <p class="fw-bold text-success">Eligible to Vote: <strong><?= $both_sources ?></strong></p>
-                    </div>
-                </div>
-                
+
+
+
+
                 <div class="card mb-4">
                     <div class="card-header">
                         <h5>Voting Statistics</h5>

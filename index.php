@@ -32,6 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['voter_id'])) {
 
         } elseif ($voter['has_voted']) {
 //            $_SESSION['voter_id'] = $voter_id;
+            $error = "You have voted before!!";
+            $voter = null;
+
         } else {
             $_SESSION['voter_id'] = $voter_id;
         }
