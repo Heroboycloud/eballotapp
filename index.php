@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['voter_id'])) {
             $_SESSION['voter_id'] = $voter_id;
 
         } elseif ($voter['has_voted']) {
-            $_SESSION['voter_id'] = $voter_id;
+//            $_SESSION['voter_id'] = $voter_id;
         } else {
             $_SESSION['voter_id'] = $voter_id;
         }
