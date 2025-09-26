@@ -1,0 +1,20 @@
+delete the tables in eballot
+
+upload ballot.sql( only ballot.sql)
+
+go to admin.php
+
+upload both excel sheets
+
+get someone id
+
+now in another tab open localhost/eballot
+
+
+next,vote
+
+
+please i dey busy too ...this project dey give me stress for debugging
+
+
+let's hope no problem now
