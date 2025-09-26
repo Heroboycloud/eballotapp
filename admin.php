@@ -266,26 +266,80 @@ $results = $stmt->fetchAll();
                 </div>
             </div>
         </div>
-        
-        <div class="card">
-            <div class="card-header">
-                <h5>Election Results</h5>
-            </div>
-            <div class="card-body">
-                <table class="table table-striped">
+
+<!-- Add this section to your existing admin.php file -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h5>Election Results - Multiple Positions</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <!-- President Results -->
+            <div class="col-md-6">
+                <h6>Vice President Election Results</h6>
+                <table class="table table-sm">
                     <thead>
                         <tr>
                             <th>Candidate</th>
-                            <th>Position</th>
                             <th>Votes</th>
+                            <th>Percentage</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($results as $result): ?>
+                        <?php
+                        $stmt = $pdo->query("
+                            SELECT vote_president as candidate, COUNT(*) as votes 
+                            FROM voters 
+                            WHERE vote_president IS NOT NULL 
+                            GROUP BY vote_president 
+                            ORDER BY votes DESC
+                        ");
+                        $president_results = $stmt->fetchAll();
+                        $total_president_votes = array_sum(array_column($president_results, 'votes'));
+                        
+                        foreach ($president_results as $result): 
+                            $percentage = $total_president_votes > 0 ? round(($result['votes'] / $total_president_votes) * 100, 2) : 0;
+                        ?>
                             <tr>
-                                <td><?= htmlspecialchars($result['name']) ?></td>
-                                <td><?= htmlspecialchars($result['position']) ?></td>
+                                <td><?= htmlspecialchars($result['candidate']) ?></td>
                                 <td><?= $result['votes'] ?></td>
+                                <td><?= $percentage ?>%</td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Secretary Results -->
+            <div class="col-md-6">
+                <h6>General Secretary Election Results</h6>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Candidate</th>
+                            <th>Votes</th>
+                            <th>Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $stmt = $pdo->query("
+                            SELECT vote_secretary as candidate, COUNT(*) as votes 
+                            FROM voters 
+                            WHERE vote_secretary IS NOT NULL 
+                            GROUP BY vote_secretary 
+                            ORDER BY votes DESC
+                        ");
+                        $secretary_results = $stmt->fetchAll();
+                        $total_secretary_votes = array_sum(array_column($secretary_results, 'votes'));
+                        
+                        foreach ($secretary_results as $result): 
+                            $percentage = $total_secretary_votes > 0 ? round(($result['votes'] / $total_secretary_votes) * 100, 2) : 0;
+                        ?>
+                            <tr>
+                                <td><?= htmlspecialchars($result['candidate']) ?></td>
+                                <td><?= $result['votes'] ?></td>
+                                <td><?= $percentage ?>%</td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -293,5 +347,9 @@ $results = $stmt->fetchAll();
             </div>
         </div>
     </div>
+</div>
+
+
+  
 </body>
 </html>

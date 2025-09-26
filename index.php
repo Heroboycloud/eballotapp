@@ -23,17 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['voter_id'])) {
             $error = "You are not eligible to vote. You need to have paid in both payment sources.";
             if ($voter['payment_source_1'] && !$voter['payment_source_2']) {
                 $error .= " (You have only paid in Source 1)";
-            } elseif (!$voter['payment_source_1'] && $voter['payment_source_2']) {
+            } elseif (!$vvoter['payment_source_1'] && $voter['payment_source_2']) {
                 $error .= " (You have only paid in Source 2)";
             } else {
                 $error .= " (No payments recorded)";
             }
-//            $voter = null;
             $_SESSION['voter_id'] = $voter_id;
 
         } elseif ($voter['has_voted']) {
-//            $error = "You have already voted.";
-//           $voter = null;
             $_SESSION['voter_id'] = $voter_id;
         } else {
             $_SESSION['voter_id'] = $voter_id;
@@ -43,25 +40,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['voter_id'])) {
     }
 }
 
-// Handle voting
+// Handle voting for both positions
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['vote'])) {
     if (!$voter) {
         $error = "Please verify your voter ID first.";
     } else {
-        $candidate = $_POST['candidate'];
+        // Get selected candidates for both positions
+        $vote_president = $_POST['president'] ?? '';
+        $vote_secretary = $_POST['secretary'] ?? '';
         
-        $stmt = $pdo->prepare("UPDATE voters SET has_voted = TRUE, vote_candidate = ? WHERE voter_id = ?");
-        $stmt->execute([$candidate, $voter['voter_id']]);
-        
-        $success = "Your vote has been cast successfully!";
-        unset($_SESSION['voter_id']);
-        $voter = null;
+        // Validate that both positions are selected
+        if (empty($vote_president) || empty($vote_secretary)) {
+            $error = "Please select a candidate for both positions.";
+        } else {
+            $stmt = $pdo->prepare("UPDATE voters SET has_voted = TRUE, vote_president = ?, vote_secretary = ? WHERE voter_id = ?");
+            $stmt->execute([$vote_president, $vote_secretary, $voter['voter_id']]);
+            
+            $success = "Your votes have been cast successfully!";
+            $voter_name = $voter['full_name'];
+            $president_vote = $vote_president;
+            $secretary_vote = $vote_secretary;
+            
+            unset($_SESSION['voter_id']);
+            $voter = null;
+        }
     }
 }
 
-// Get candidates
-$stmt = $pdo->query("SELECT * FROM candidates");
+// Get candidates grouped by position
+$stmt = $pdo->query("SELECT * FROM candidates ORDER BY position, name");
 $candidates = $stmt->fetchAll();
+
+// Group candidates by position
+$candidates_by_position = [];
+foreach ($candidates as $candidate) {
+    $candidates_by_position[$candidate['position']][] = $candidate;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -85,14 +99,50 @@ $candidates = $stmt->fetchAll();
             padding: 15px;
             margin-bottom: 20px;
         }
+        .position-section {
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            background-color: #f8f9fa;
+        }
+        .position-header {
+            background-color: #0d6efd;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .candidate-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .candidate-card:hover {
+            border-color: #0d6efd;
+            background-color: #f0f8ff;
+        }
+        .candidate-card.selected {
+            border-color: #198754;
+            background-color: #d1e7dd;
+        }
+        .vote-summary {
+            background-color: #d1e7dd;
+            border: 2px solid #198754;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>
     <div class="hero-section">
         <div class="container text-center">
-	    <img src="logo.jpg" class="img-thumbnail" width="50" height="50" />
             <h1 class="display-4">E-Ballot Voting System</h1>
-            <p class="lead">Secure online voting - Payment verification required</p>
+            <p class="lead">Vote for Vice President and Secretary Positions</p>
         </div>
     </div>
 
@@ -102,7 +152,16 @@ $candidates = $stmt->fetchAll();
         <?php endif; ?>
         
         <?php if (isset($success)): ?>
-            <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+            <div class="alert alert-success">
+                <h4>Voting Successful!</h4>
+                <p><strong>Thank you, <?= htmlspecialchars($voter_name) ?>!</strong></p>
+                <p>Your votes have been recorded:</p>
+                <ul>
+                    <li><strong>Vice President:</strong> <?= htmlspecialchars($president_vote) ?></li>
+                    <li><strong>Secretary:</strong> <?= htmlspecialchars($secretary_vote) ?></li>
+                </ul>
+                <p class="mb-0">You have successfully completed the voting process.</p>
+            </div>
         <?php endif; ?>
         
         <?php if (!$voter): ?>
@@ -111,7 +170,7 @@ $candidates = $stmt->fetchAll();
                     <div class="eligibility-info">
                         <h5>Voting Eligibility Requirements</h5>
                         <p>To be eligible to vote, you must have made payments in <strong>both</strong> payment sources.</p>
-                        <p class="mb-0">If you have only paid in one source, please contact the administrator.</p>
+                        <p class="mb-0">You will be voting for <strong>two positions</strong>: Vice President and Secretary.</p>
                     </div>
                     
                     <div class="card">
@@ -130,24 +189,14 @@ $candidates = $stmt->fetchAll();
                             </form>
                         </div>
                     </div>
-                    
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            <h5>Don't know your Voter ID?</h5>
-                        </div>
-                        <div class="card-body">
-                            <p>If you don't know your Voter ID, please contact the election administrator with your full name.</p>
-                            <p class="mb-0">Your Voter ID is typically generated from your name and payment records.</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         <?php else: ?>
             <div class="row justify-content-center">
-                <div class="col-md-10">
+                <div class="col-md-12">
                     <div class="card">
                         <div class="card-header bg-success text-white">
-                            <h4>Cast Your Vote</h4>
+                            <h4>Cast Your Votes</h4>
                         </div>
                         <div class="card-body">
                             <div class="alert alert-success">
@@ -160,29 +209,86 @@ $candidates = $stmt->fetchAll();
                                 </p>
                             </div>
                             
-                            <p>Please select your preferred candidate:</p>
+                            <p class="lead text-center mb-4">Please select one candidate for each position:</p>
                             
-                            <form method="POST">
-                                <div class="row">
-                                    <?php foreach ($candidates as $candidate): ?>
-                                        <div class="col-md-6 mb-3">
-                                            <div class="form-check card">
-                                                <div class="card-body">
-                                                    <input class="form-check-input" type="radio" name="candidate" 
-                                                           id="candidate<?= $candidate['id'] ?>" 
-                                                           value="<?= htmlspecialchars($candidate['name']) ?>" required>
-                                                    <label class="form-check-label w-100" for="candidate<?= $candidate['id'] ?>">
-                                                        <strong><?= htmlspecialchars($candidate['name']) ?></strong><br>
-                                                        <small class="text-muted">Position: <?= htmlspecialchars($candidate['position']) ?></small>
-                                                    </label>
+                            <form method="POST" id="votingForm">
+                                <!-- President Position -->
+                                <div class="position-section">
+                                    <div class="position-header">
+                                        <h3>Vice President</h3>
+                                        <p class="mb-0">Select one candidate for Vice President</p>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <?php if (isset($candidates_by_position['Vice President'])): ?>
+                                            <?php foreach ($candidates_by_position['Vice President'] as $candidate): ?>
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="candidate-card" onclick="selectCandidate('president', '<?= $candidate['name'] ?>')">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="president" 
+                                                                   id="president_<?= $candidate['id'] ?>" 
+                                                                   value="<?= htmlspecialchars($candidate['name']) ?>" required>
+                                                            <label class="form-check-label w-100" for="president_<?= $candidate['id'] ?>">
+                                                                <h5><?= htmlspecialchars($candidate['name']) ?></h5>
+                                                                <p class="text-muted mb-0">Position: <?= htmlspecialchars($candidate['position']) ?></p>
+                                                            </label>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <div class="col-12">
+                                                <div class="alert alert-warning">No candidates available for Vice President position.</div>
                                             </div>
-                                        </div>
-                                    <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                                 
-                                <div class="mt-4">
-                                    <button type="submit" name="vote" class="btn btn-success btn-lg w-100">Cast My Vote</button>
+                                <!-- Secretary Position -->
+                                <div class="position-section">
+                                    <div class="position-header">
+                                        <h3>Secretary</h3>
+                                        <p class="mb-0">Select one candidate for Secretary</p>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <?php if (isset($candidates_by_position['Secretary'])): ?>
+                                            <?php foreach ($candidates_by_position['Secretary'] as $candidate): ?>
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="candidate-card" onclick="selectCandidate('secretary', '<?= $candidate['name'] ?>')">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="secretary" 
+                                                                   id="secretary_<?= $candidate['id'] ?>" 
+                                                                   value="<?= htmlspecialchars($candidate['name']) ?>" required>
+                                                            <label class="form-check-label w-100" for="secretary_<?= $candidate['id'] ?>">
+                                                                <h5><?= htmlspecialchars($candidate['name']) ?></h5>
+                                                                <p class="text-muted mb-0">Position: <?= htmlspecialchars($candidate['position']) ?></p>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <div class="col-12">
+                                                <div class="alert alert-warning">No candidates available for Secretary position.</div>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                                
+                                <!-- Vote Summary -->
+                                <div class="vote-summary" id="voteSummary" style="display: none;">
+                                    <h5>Your Selected Candidates:</h5>
+                                    <p><strong>Vice President:</strong> <span id="selectedPresident">Not selected</span></p>
+                                    <p><strong>Secretary:</strong> <span id="selectedSecretary">Not selected</span></p>
+                                    <div class="alert alert-info">
+                                        <small>Please review your selections before submitting. You cannot change your votes after submission.</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 text-center">
+                                    <button type="submit" name="vote" class="btn btn-success btn-lg px-5">Submit Votes</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-lg px-5 ms-2" onclick="resetForm()">Reset Selections</button>
                                 </div>
                             </form>
                         </div>
@@ -193,7 +299,76 @@ $candidates = $stmt->fetchAll();
     </div>
 
     <footer class="bg-dark text-white text-center py-4 mt-5">
-        <p>E-Ballot System &copy; <?= date('Y') ?> | Payment Verification Required</p>
+        <p>E-Ballot System &copy; <?= date('Y') ?> | Vote for Multiple Positions</p>
     </footer>
+
+    <script>
+        function selectCandidate(position, candidateName) {
+            // Unselect all cards for this position
+            document.querySelectorAll('.candidate-card').forEach(card => {
+                if (card.querySelector(`input[name="${position}"]`)) {
+                    card.classList.remove('selected');
+                }
+            });
+            
+            // Select the clicked card
+            event.currentTarget.classList.add('selected');
+            
+            // Update the radio button
+            const radio = event.currentTarget.querySelector('input[type="radio"]');
+            radio.checked = true;
+            
+            // Update summary
+            updateVoteSummary();
+        }
+        
+        function updateVoteSummary() {
+            const presidentRadio = document.querySelector('input[name="president"]:checked');
+            const secretaryRadio = document.querySelector('input[name="secretary"]:checked');
+            
+            if (presidentRadio || secretaryRadio) {
+                document.getElementById('voteSummary').style.display = 'block';
+                
+                if (presidentRadio) {
+                    document.getElementById('selectedPresident').textContent = presidentRadio.value;
+                }
+                
+                if (secretaryRadio) {
+                    document.getElementById('selectedSecretary').textContent = secretaryRadio.value;
+                }
+            }
+        }
+        
+        function resetForm() {
+            // Uncheck all radio buttons
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+            });
+            
+            // Remove selected class from all cards
+            document.querySelectorAll('.candidate-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Hide summary
+            document.getElementById('voteSummary').style.display = 'none';
+        }
+        
+        // Initialize form validation
+        document.getElementById('votingForm').addEventListener('submit', function(e) {
+            const presidentSelected = document.querySelector('input[name="president"]:checked');
+            const secretarySelected = document.querySelector('input[name="secretary"]:checked');
+            
+            if (!presidentSelected || !secretarySelected) {
+                e.preventDefault();
+                alert('Please select a candidate for both positions before submitting your votes.');
+            }
+        });
+        
+        // Update summary when page loads if there are already selections
+        document.addEventListener('DOMContentLoaded', function() {
+            updateVoteSummary();
+        });
+    </script>
 </body>
 </html>
