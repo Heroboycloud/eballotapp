@@ -154,6 +154,32 @@ $results = $stmt->fetchAll();
             <a class="navbar-brand" href="#"><img src="logo.jpg" class="img-rounded img-thumbnail" width="30" height="30" />Adventist Grammar School E-Ballot Admin</a>
             <div class="navbar-nav ms-auto">
                 <a class="nav-link" href="logout.php">Logout</a>
+<!-- Add this to the admin.php navigation bar (after the logout link) -->
+<div class="navbar-nav ms-auto">
+    <a class="nav-link text-warning" href="reset.php">
+        <i class="bi bi-arrow-repeat"></i> Reset System
+    </a>
+    <a class="nav-link" href="logout.php">Logout</a>
+</div>
+
+<!-- Or add a reset card in the main content area -->
+<div class="col-md-6">
+    <div class="card border-warning">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                System Administration
+            </h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text">Reset all voter records and start fresh.</p>
+            <a href="reset.php" class="btn btn-warning">
+                <i class="bi bi-arrow-repeat me-2"></i>
+                Reset System
+            </a>
+        </div>
+    </div>
+</div>
             </div>
         </div>
     </nav>
@@ -186,6 +212,8 @@ $results = $stmt->fetchAll();
                                 <div class="form-text">Upload Excel file in the specified format</div>
                             </div>
                             <button type="submit" class="btn btn-primary">Upload and Process</button>
+                            <a type="button" class="btn btn-danger" href="reset.php">Reset Records</a>
+
                         </form>
                     </div>
                 </div>
